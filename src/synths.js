@@ -1,10 +1,10 @@
-import { Transport, Synth } from 'tone';
-import { slowAutoFilter, fastAutoFilter, reverb, distortion } from './effects.js'
+import { Synth } from 'tone';
+import { slowAutoFilter, fastAutoFilter, reverb, distortion, feedbackDelay } from './effects.js'
 
-const TONIC_VELOCITY = 0.3
-const SENTIMENT_VELOCITY = 0.1
-const THIRD_VELOCITY = 0.2
-const GAIN = 0.4
+const TONIC_VELOCITY = 0.0
+const SENTIMENT_VELOCITY = 0.2
+const THIRD_VELOCITY = 0.4
+const GAIN = 0.7
 
 // Notes arranged by subjective consonance against C
 const notesByConsonance = [
@@ -38,10 +38,10 @@ const colorSynth = new Synth({envelope: {
 
 tonicSynth.connect(slowAutoFilter);
 colorSynth.connect(fastAutoFilter);
-colorSynth.connect(distortion);
 thirdSynth.connect(reverb);
 colorSynth.connect(reverb);
-
+colorSynth.connect(feedbackDelay);
+thirdSynth.connect(feedbackDelay);
 
 function getNoteGivenSentiment(sentiment) {
   let possibleNotes = [];

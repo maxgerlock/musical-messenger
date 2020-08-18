@@ -1,0 +1,34 @@
+.chatBubble {
+  font-family: system-ui;
+  color: white;
+  background: gray;
+  text-align: center;
+  flex-basis: 40%;
+  height: auto;
+  border-radius: 25px;
+  padding: 10px;
+  position: relative;
+  display: block;
+  max-width: 200px;
+}
+
+.sent-by-user {
+  margin-left:auto;
+  margin-right:0;
+  background-color: #0084ff;
+}
+
+.received-by-user {
+  left: 0px;
+  background-color: #EEE;
+  color: black;
+}
+
+.bumper {
+  flex-basis: 60%;
+}
+
+.blank-line {
+  height: 0;
+  flex-basis: 100%;
+}

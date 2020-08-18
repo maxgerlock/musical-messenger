@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import {start, Player, Transport } from 'tone';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button, InputGroup, FormControl, Container, Row } from 'react-bootstrap';
+import {start, Transport } from 'tone';
+import ChatBubble from './ChatBubble.js';
 import { playTonic, playThird, playSentimentNote } from './synths.js';
 import { activateTracksBySentiment, setupPlayback } from './playback.js'
 import { getSentimentScore } from './sentiment.js'
@@ -15,13 +18,10 @@ class App extends Component {
     this.state = {text: '', messages: [], messageCount: 0};
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleAudiate = this.handleAudiate.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
     Transport.bpm.value = 120
     Transport.stop();
     setupPlayback();
-  }
-
-  handleTextChange(event) {
-    this.setState({text: event.target.value});
   }
 
   async handleAudiate() {
@@ -39,19 +39,47 @@ class App extends Component {
     activateTracksBySentiment(sentiment);
   }
 
+  handleTextChange(event) {
+    this.setState({text: event.target.value});
+  }
+
+  handleKeyDown(e) {
+  if (e.key === 'Enter') {
+    this.handleAudiate();
+  }
+}
+
+
   render() {
     const messages = this.state.messages.map((message) =>
-    <p key={message.id}>{message.text}</p>
+    <ChatBubble key={message.id} text={message.text} sentByUser={!(message.id % 2)}/>
   );
     return (
       <div className="App">
-        <div className="App Header">
+        <div className="App-header">
           <h1>Musical Messenger</h1>
         </div>
-        <div>{messages}</div>
-        <textarea value={this.state.text} onChange={this.handleTextChange} id="post" rows="5" cols="33" placeholder='Paste your post here'> </textarea>
-        <br />
-        <button onClick={this.handleAudiate} id='audiate-button'> audiate </button>
+        <Container>
+          <Row>
+            <div className="Chat-container">{messages}</div>
+          </Row>
+        </Container>
+        <Container>
+          <Row>
+            <InputGroup className="mb-3">
+              <FormControl
+                onKeyDown={this.handleKeyDown}
+                onChange={this.handleTextChange}
+                value={this.state.text}
+                aria-label="Message text"
+                aria-describedby="basic-addon2"
+              />
+              <InputGroup.Append>
+                <Button type="submit" variant="info" onClick={this.handleAudiate}>jam</Button>
+              </InputGroup.Append>
+            </InputGroup>
+          </Row>
+        </Container>
       </div>
     );
   }

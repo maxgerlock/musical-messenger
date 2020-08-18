@@ -10,13 +10,17 @@ import nice_pad from './audio/MM_nice pad.mp3'
 import snare from './audio/MM_snare.mp3'
 import twitchy_perc from './audio/MM_twitchy perc.mp3'
 
+const MUTE_NEUTRAL_PROBABILITY = 0.33;
+const UNMUTE_NEUTRAL_PROBABILITY = 0.33;
+const UNIVERSAL_GAIN_MODIFIER = 0.7;
+
 const kickPlayer = new Player({
 	url : kick,
   loop: true,
 	autostart : false,
   fadeIn: 0.3,
   fadeOut: 0.3,
-  volume : -2.75,
+  volume : -2.75 * UNIVERSAL_GAIN_MODIFIER,
 }).toDestination();
 
 const bassPlayer = new Player({
@@ -25,7 +29,7 @@ const bassPlayer = new Player({
 	autostart : false,
   fadeIn: 0.3,
   fadeOut: 0.3,
-  volume : -13.0,
+  volume : -13.0 * UNIVERSAL_GAIN_MODIFIER,
 }).toDestination();
 
 const chimesPlayer = new Player({
@@ -34,7 +38,7 @@ const chimesPlayer = new Player({
 	autostart : false,
   fadeIn: 0.3,
   fadeOut: 0.3,
-  volume : -9.97,
+  volume : -9.97 * UNIVERSAL_GAIN_MODIFIER,
 }).toDestination();
 
 const choralLeadPlayer = new Player({
@@ -43,7 +47,7 @@ const choralLeadPlayer = new Player({
 	autostart : false,
   fadeIn: 0.3,
   fadeOut: 0.3,
-  volume : -4.12,
+  volume : -4.12 * UNIVERSAL_GAIN_MODIFIER,
 }).toDestination();
 
 const distLeadPlayer = new Player({
@@ -52,7 +56,7 @@ const distLeadPlayer = new Player({
 	autostart : false,
   fadeIn: 0.3,
   fadeOut: 0.3,
-  volume : -8.7,
+  volume : -8.7 * UNIVERSAL_GAIN_MODIFIER,
 }).toDestination();
 
 const harshPadPlayer = new Player({
@@ -61,7 +65,7 @@ const harshPadPlayer = new Player({
   autostart : false,
   fadeIn: 0.3,
   fadeOut: 0.3,
-  volume : -8.7,
+  volume : -8.7 * UNIVERSAL_GAIN_MODIFIER,
 }).toDestination();
 
 const hihatPlayer = new Player({
@@ -70,7 +74,7 @@ const hihatPlayer = new Player({
 	autostart : false,
   fadeIn: 0.3,
   fadeOut: 0.3,
-  volume : -10.0,
+  volume : -10.0 * UNIVERSAL_GAIN_MODIFIER,
 }).toDestination();
 
 const nicePadPlayer = new Player({
@@ -79,7 +83,7 @@ const nicePadPlayer = new Player({
 	autostart : false,
   fadeIn: 0.3,
   fadeOut: 0.3,
-  volume : -9.0,
+  volume : -9.0 * UNIVERSAL_GAIN_MODIFIER,
 }).toDestination();
 
 const snarePlayer = new Player({
@@ -88,7 +92,7 @@ const snarePlayer = new Player({
 	autostart : false,
   fadeIn: 0.3,
   fadeOut: 0.3,
-  volume : -10.0,
+  volume : -10.0 * UNIVERSAL_GAIN_MODIFIER,
 }).toDestination();
 
 const twitchyPercPlayer = new Player({
@@ -97,7 +101,7 @@ const twitchyPercPlayer = new Player({
 	autostart : false,
   fadeIn: 0.3,
   fadeOut: 0.3,
-  volume : -13.2,
+  volume : -13.2 * UNIVERSAL_GAIN_MODIFIER,
 }).toDestination();
 
 const sources = [
@@ -122,24 +126,28 @@ const sources = [
   {
     name: 'hihat',
     player: hihatPlayer,
+    neutral: true,
     minimumSentiment: 0.4,
     maximumSentiment: 0.6,
   },
   {
     name: 'snare',
     player: snarePlayer,
+    neutral: true,
     minimumSentiment: 0.4,
     maximumSentiment: 0.6,
   },
   {
     name: 'kick',
     player: kickPlayer,
+    neutral: true,
     minimumSentiment: 0.4,
     maximumSentiment: 0.6,
   },
   {
     name: 'bass',
     player: bassPlayer,
+    neutral: true,
     minimumSentiment: 0.4,
     maximumSentiment: 0.6,
   },
@@ -171,7 +179,7 @@ export function setupPlayback() {
 function compareSourcesAsc(s1, s2) {
   if (s1.sentiment < s2.sentiment) {
     return -1;
-  } else if (s1.sentiment == s2.sentiment) {
+  } else if (s1.sentiment === s2.sentiment) {
     return 0;
   } else {
     return 1;
@@ -186,13 +194,17 @@ function sentimentIsExtreme(sentiment) {
   return (Math.abs(sentiment - 0.5) > 0.25);
 }
 
+function sentimentIsExtremeChange(sentiment, lastSentiment) {
+  return (Math.abs(sentiment - lastSentiment) > 0.5);
+}
+
 function findUnmuteCandidates(sentiment) {
   let unmuteCandidates = [];
   if (sentiment >= 0.5) { // if sentiment is positive, play the most positive valid source
-    unmuteCandidates = sources.filter(source => source.minimumSentiment >= 0.5 && source.minimumSentiment < sentiment && source.player.mute == true)
+    unmuteCandidates = sources.filter(source => source.minimumSentiment >= 0.5 && source.minimumSentiment < sentiment && source.player.mute === true)
     unmuteCandidates.sort(compareSourcesDesc);
   } else { // if sentiment is negative, play the most negative valid source
-    unmuteCandidates = sources.filter(source => source.maximumSentiment < 0.5 && source.maximumSentiment > sentiment && source.player.mute == true)
+    unmuteCandidates = sources.filter(source => source.maximumSentiment < 0.5 && source.maximumSentiment > sentiment && source.player.mute === true)
     unmuteCandidates.sort(compareSourcesAsc);
   }
   return unmuteCandidates;
@@ -201,29 +213,57 @@ function findUnmuteCandidates(sentiment) {
 function findMuteCandidates(sentiment) {
   let muteCandidates = [];
   if (sentiment >= 0.5) { // if sentiment is positive, mute the most negative source
-    muteCandidates = sources.filter(source => source.maximumSentiment < 0.5 && source.player.mute == false)
+    muteCandidates = sources.filter(source => source.maximumSentiment < 0.5 && source.player.mute === false)
     muteCandidates.sort(compareSourcesAsc);
   } else { // if sentiment is negative, mute the most positive source
-    muteCandidates = sources.filter(source => source.minimumSentiment > 0.5 && source.player.mute == false)
+    muteCandidates = sources.filter(source => source.minimumSentiment > 0.5 && source.player.mute === false)
     muteCandidates.sort(compareSourcesDesc);
   }
   return muteCandidates;
 }
 
+function randomlyActivateNeutralSources() {
+  if (Math.random() < UNMUTE_NEUTRAL_PROBABILITY) {
+    let neutralSources = sources.filter(source => source.player.mute === true && source.neutral === true);
+    if (neutralSources.length > 0) {
+      let randomSource = neutralSources[Math.floor(Math.random() * neutralSources.length)];
+      randomSource.player.mute = false;
+    }
+  }
+}
+
+function randomlyMuteNeutralSources() {
+  if (Math.random() < MUTE_NEUTRAL_PROBABILITY) {
+    let neutralSources = sources.filter(source => source.player.mute === false && source.neutral === true);
+    if (neutralSources.length > 0) {
+      let randomSource = neutralSources[Math.floor(Math.random() * neutralSources.length)];
+      randomSource.player.mute = true;
+    }
+  }
+}
+
+let lastSentiment = 0.5;
+
 export function activateTracksBySentiment(sentiment) {
-  const kick = sources.find(source => source.name == 'kick'); // always play the kick to get things started
+  const kick = sources.find(source => source.name === 'kick'); // always play the kick to get things started
   kick.player.mute = false;
   const unmuteCandidates = findUnmuteCandidates(sentiment);
   let muteCandidates = [];
   if (sentimentIsExtreme(sentiment)) {
     muteCandidates = findMuteCandidates(sentiment);
   }
+  if (sentimentIsExtremeChange(sentiment, lastSentiment)) {
+    randomlyMuteNeutralSources();
+  }
 
   if (unmuteCandidates.length > 0) {
-    console.log(unmuteCandidates)
     unmuteCandidates[0].player.mute = false;
   }
   if (muteCandidates.length > 0) {
     muteCandidates[0].player.mute = true;
   }
+
+  randomlyActivateNeutralSources();
+
+  lastSentiment = sentiment;
 }
