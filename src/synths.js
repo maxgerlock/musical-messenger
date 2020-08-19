@@ -1,5 +1,5 @@
 import { Synth } from 'tone';
-import { slowAutoFilter, fastAutoFilter, reverb, feedbackDelay } from './effects.js'
+import { reverb, feedbackDelay } from './effects.js'
 
 const TONIC_VELOCITY = 0.6
 const SENTIMENT_VELOCITY = 0.2
@@ -36,8 +36,6 @@ const colorSynth = new Synth({envelope: {
     release: 0.6,
   }}).toDestination();
 
-tonicSynth.connect(slowAutoFilter);
-colorSynth.connect(fastAutoFilter);
 thirdSynth.connect(reverb);
 colorSynth.connect(reverb);
 colorSynth.connect(feedbackDelay);
