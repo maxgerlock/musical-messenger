@@ -1,7 +1,7 @@
 import { Synth } from 'tone';
-import { slowAutoFilter, fastAutoFilter, reverb, distortion, feedbackDelay } from './effects.js'
+import { slowAutoFilter, fastAutoFilter, reverb, feedbackDelay } from './effects.js'
 
-const TONIC_VELOCITY = 0.0
+const TONIC_VELOCITY = 0.6
 const SENTIMENT_VELOCITY = 0.2
 const THIRD_VELOCITY = 0.4
 const GAIN = 0.7
@@ -66,25 +66,25 @@ function getNoteGivenSentiment(sentiment) {
   const randomElement =
     possibleNotes[Math.floor(Math.random() * possibleNotes.length)];
   return randomElement;
-};
+}
 
 export function playTonic() {
-  tonicSynth.triggerAttack("C3", 0, TONIC_VELOCITY*GAIN);
-  tonicSynth.triggerRelease("+16n");
-};
+  tonicSynth.triggerAttack("C4", 0, TONIC_VELOCITY*GAIN);
+  tonicSynth.triggerRelease("+32n");
+}
 
 export function playThird(sentiment) {
   if (sentiment >= 0) {
     thirdSynth.triggerAttack("E4", 0, THIRD_VELOCITY*GAIN);
-    thirdSynth.triggerRelease("+16n");
+    thirdSynth.triggerRelease("+32n");
   } else {
     thirdSynth.triggerAttack("Eb4", 0, THIRD_VELOCITY*GAIN);
-    thirdSynth.triggerRelease("+16n");
+    thirdSynth.triggerRelease("+32n");
   }
 }
 
 export function playSentimentNote(sentiment) {
   const note = getNoteGivenSentiment(sentiment);
   colorSynth.triggerAttack(note, 0, SENTIMENT_VELOCITY*GAIN);
-  colorSynth.triggerRelease("+16n");
-};
+  colorSynth.triggerRelease("+32n");
+}

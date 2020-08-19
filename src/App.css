@@ -11,50 +11,139 @@ body {
 }
 
 .App-header {
-  /* background-color: #222; */
-  /* height: 150px; */
   padding: 5px;
   margin-bottom: 20px;
   color: white;
+  background-color: #7ea3f2;
+}
+
+.App-container {
+  position:absolute;
+  width:80%;
+  bottom:0px;
+  right:25%;
+  left:50%;
+  margin-left:-40%;
+  height:90%;
 }
 
 .Chat-container {
   width: 100%;
-  height: 100%;
+  height: 80%;
   margin: auto;
   background-color: #7ea3f2;
   padding: 10px;
   border-top-left-radius: 25px;
   border-top-right-radius: 25px;
   min-height: 100px;
+  max-height: 900px;
+  overflow: auto;
 }
-
-/*.App-intro {
-  font-size: large;
-}
-*/
-
-/* .Chat-box {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-
-  height: auto;
-} */
-
-/* .Send-button {
-  display: block;
-  margin-left:auto;
-  margin-right:0;
-  background-color: #4287f5;
-  color: white;
-} */
-
 .Form-container {
   width: 100%;
 }
+.very-negative {
+  animation: very-negative-pulse 0.5s infinite;
+}
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.somewhat-negative {
+  animation: somewhat-negative-pulse 0.5s infinite;
+}
+
+.neutral {
+  animation: neutral-pulse 0.5s infinite;
+}
+
+.somewhat-positive {
+  animation: somewhat-positive-pulse 0.5s infinite;
+}
+
+.very-positive {
+  animation: very-positive-pulse 0.5s infinite;
+}
+
+
+@keyframes very-negative-pulse {
+	0% {
+		transform: scale(0.999);
+		box-shadow: 0 0 0 0 #ff0000;
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 40px 20px rgba(0, 0, 0, 0);
+	}
+
+	100% {
+		transform: scale(0.999);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	}
+}
+
+@keyframes somewhat-negative-pulse {
+	0% {
+		transform: scale(0.999);
+		box-shadow: 0 0 0 0 #ff8787;
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 40px 20px rgba(0, 0, 0, 0);
+	}
+
+	100% {
+		transform: scale(0.999);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	}
+}
+
+@keyframes neutral-pulse {
+	0% {
+		transform: scale(0.999);
+		box-shadow: 0 0 0 0 #fff;
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 40px 20px rgba(0, 0, 0, 0);
+	}
+
+	100% {
+		transform: scale(0.999);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	}
+}
+
+@keyframes somewhat-positive-pulse {
+	0% {
+		transform: scale(0.999);
+		box-shadow: 0 0 0 0 #15ff00;
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 40px 20px rgba(0, 0, 0, 0);
+	}
+
+	100% {
+		transform: scale(0.999);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	}
+}
+
+@keyframes very-positive-pulse {
+	0% {
+		transform: scale(0.999);
+		box-shadow: 0 0 0 0 #00ddff;
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 40px 20px rgba(0, 0, 0, 0);
+	}
+
+	100% {
+		transform: scale(0.999);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	}
 }

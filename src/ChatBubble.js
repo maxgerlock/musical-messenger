@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 
 import './ChatBubble.css';
 
@@ -14,15 +15,15 @@ class ChatBubble extends Component {
 
   getSentimentClass() {
     if (this.props.sentiment < 0.25) {
-      return 'very-negative';
+      return 'very-negative-message';
     } else if (this.props.sentiment < 0.45) {
-      return 'somewhat-negative';
+      return 'somewhat-negative-message';
     } else if (this.props.sentiment < 0.55) {
-      return 'neutral';
+      return 'neutral-message';
     } else if (this.props.sentiment < 0.75) {
-      return 'somewhat-positive';
+      return 'somewhat-positive-message';
     } else {
-      return 'very positive';
+      return 'very-positive-message';
     }
   }
 
@@ -49,7 +50,7 @@ class ChatBubble extends Component {
       );
     }
   }
-//        <div className='blank-line'/>
+
   render() {
     const classes = `chatBubble ${this.getSentimentClass()} ${this.getSentReceivedClass()}`
     return (
@@ -58,6 +59,12 @@ class ChatBubble extends Component {
       </React.Fragment>
     );
   }
+}
+
+ChatBubble.propTypes = {
+  sentByUser: PropTypes.bool,
+  sentiment: PropTypes.number,
+  text: PropTypes.string,
 }
 
 export default ChatBubble;
