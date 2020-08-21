@@ -57,7 +57,7 @@ async function getSentimentScore(text, engine='AFINN') {
       let result = sentiment.analyze(text).comparative;
       result = result/8 + 0.5 // transform from -4-4 to 0-1
       return apply_sigmoid(result);
-    } else if (engine == 'tensorflow') {
+    } else if (engine === 'tensorflow') {
     await setupSentimentModel()
     const inputText = text.trim().toLowerCase().replace(/(\.|,|!)/g, '').split(' ');
     // Convert the words to a sequence of word indices.
