@@ -6,7 +6,7 @@ import {start, Transport } from 'tone';
 import ChatBubble from './ChatBubble.js';
 import { playTonic, playThird, playSentimentNote } from './synths.js';
 import { activateTracksBySentiment, setupPlayback } from './playback.js'
-import { getSentimentScore } from './sentiment.js'
+ import { getSentimentScore } from './sentiment.js'
 
 import './App.css';
 

@@ -1,3 +1,5 @@
+import Sentiment from 'sentiment'
+
 /**
 Adapted from Benson Ruan
 https://github.com/bensonruan/Sentiment-Analysis/blob/master/js/sentiment-analysis.js
@@ -42,7 +44,20 @@ async function setupSentimentModel(){
     }
 }
 
-async function getSentimentScore(text) {
+// custom sigmoid function to skew sentiments towards more extreme values
+function apply_sigmoid(x) {
+   // the degree to which values are skewed towards extremes
+  const SIGMOID_SCALING_FACTOR = 16;
+  return 1/(1+Math.exp(-(SIGMOID_SCALING_FACTOR*(x-0.5))))
+}
+
+async function getSentimentScore(text, engine='AFINN') {
+    if (engine === 'AFINN') {
+      const sentiment = new Sentiment();
+      let result = sentiment.analyze(text).comparative;
+      result = result/8 + 0.5 // transform from -4-4 to 0-1
+      return apply_sigmoid(result);
+    } else if (engine == 'tensorflow') {
     await setupSentimentModel()
     const inputText = text.trim().toLowerCase().replace(/(\.|,|!)/g, '').split(' ');
     // Convert the words to a sequence of word indices.
@@ -62,6 +77,7 @@ async function getSentimentScore(text) {
     predictOut.dispose();
 
     return score;
+  }
 }
 
 function padSequences(sequences, maxLen, padding = 'pre', truncating = 'pre', value = PAD_INDEX) {
