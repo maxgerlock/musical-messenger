@@ -96,9 +96,6 @@ class Chat extends Component {
         <div className='App-container'>
           <div className={`Chat-container ${this.getSentimentClass()}`}>{messages}</div>
           <InputGroup className="mb-3">
-          <InputGroup.Prepend>
-          <InputGroup.Text id="inputGroup-sizing-sm">Small</InputGroup.Text>
-          </InputGroup.Prepend>
             <FormControl
               onKeyDown={this.handleKeyDown}
               onChange={this.handleTextChange}
