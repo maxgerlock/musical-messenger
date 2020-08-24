@@ -1,0 +1,17 @@
+.recorded-content {
+  width: 200px;
+  height: 31px;
+  line-height: 31px;
+  border-radius: 20px;
+  background-color: #f03d25;
+  text-align: center;
+  display: inline-block;
+}
+
+.dropdown-item {
+  text-align: center;
+}
+
+.fx-dropdown-container {
+  display: inline-block;
+}
