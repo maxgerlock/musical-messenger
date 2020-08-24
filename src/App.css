@@ -10,13 +10,6 @@ body {
   background: #3b5998;
 }
 
-.App-header {
-  padding: 5px;
-  margin-bottom: 20px;
-  color: white;
-  background-color: #7ea3f2;
-}
-
 .App-container {
   position:absolute;
   width:80%;

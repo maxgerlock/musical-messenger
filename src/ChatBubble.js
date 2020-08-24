@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import './ChatBubble.css';
 
-
+// TODO determine whether this component is rendering unnecessarily
 class ChatBubble extends Component {
 
   constructor() {
@@ -14,6 +14,9 @@ class ChatBubble extends Component {
   }
 
   getSentimentClass() {
+    if (!this.props.musical) {
+      return '';
+    }
     if (this.props.sentiment < 0.25) {
       return 'very-negative-message';
     } else if (this.props.sentiment < 0.45) {
@@ -63,6 +66,7 @@ class ChatBubble extends Component {
 
 ChatBubble.propTypes = {
   sentByUser: PropTypes.bool,
+  musical: PropTypes.bool,
   sentiment: PropTypes.number,
   text: PropTypes.string,
 }

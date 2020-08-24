@@ -1,0 +1,25 @@
+.App-header {
+  padding: 5px;
+  margin-bottom: 20px;
+  color: white;
+  background-color: #7ea3f2;
+  height: 66px;
+}
+
+.note-container {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  float: right;
+  margin-right: 25px;
+  cursor: pointer;
+}
+
+.active {
+  color: white;
+  box-shadow: 0px 0px 175px 0px rgba(255, 200, 0, 1);
+}
+
+.inactive {
+  color: #9eb9f0;
+}
