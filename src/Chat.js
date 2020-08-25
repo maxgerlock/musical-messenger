@@ -121,7 +121,7 @@ class Chat extends Component {
   getRecordPopover() {
     return (
       <Popover className='record-popover' id="record-popover">
-        <Popover.Title as="h3">Record a voice message</Popover.Title>
+        <Popover.Title as="h3">Voice message</Popover.Title>
         <Popover.Content className='record-button-container'>
           {this.getRecordPopoverContents()}
         </Popover.Content>

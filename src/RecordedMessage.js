@@ -13,33 +13,81 @@ class RecordedMessage extends Component {
     this.state = {
       isRecording: false,
       effect: null,
+      selectedEffectKey: 1,
     }
-    this.effectsDropdown = this.effectsDropdown.bind(this);
-    this.sendButton = this.sendButton.bind(this);
+    this.renderEffectsDropdown = this.renderEffectsDropdown.bind(this);
+    this.renderSendButton = this.renderSendButton.bind(this);
+    this.renderPlayButton = this.renderPlayButton.bind(this);
+    this.handlePlay = this.handlePlay.bind(this);
+    this.handleStop = this.handleStop.bind(this);
+    this.renderDropDownItems = this.renderDropDownItems.bind(this);
+    this.handleDropdownSelect = this.handleDropdownSelect.bind(this);
+    this.effects = [
+          {
+            key: 1,
+            effectName: 'No FX',
+          },
+          {
+            key: 2,
+            effectName: '🤖',
+          },
+          {
+            key: 3,
+            effectName: '👶',
+          },
+      ]
   }
 
-  effectsDropdown() {
+  renderDropDownItems() {
+    return this.effects.map(effect => (
+        <Dropdown.Item key={effect.key} eventKey={effect.key} active={effect.key == this.state.selectedEffectKey}>
+          {effect.effectName}
+        </Dropdown.Item>
+    ));
+  }
+
+  handleDropdownSelect(eventKey, event) {
+    this.setState({...this.state, selectedEffectKey: eventKey});
+  }
+
+  renderEffectsDropdown() {
+    const title = (this.effects.find(effect => effect.key == this.state.selectedEffectKey) || {effectName: 'fx'}).effectName
     return (
       <DropdownButton
-        className='fx-dropdown'
-        size="sm"
+        className=' btn-block fx-dropdown'
+        block={true}
+        size="md"
         as={ButtonGroup}
         key={'fx-dropdown'}
         id={'fx-dropdown'}
-        variant={'info'}
-        title={'fx'}
+        title={title}
+        onSelect={this.handleDropdownSelect}
       >
-        <Dropdown.Item eventKey="1">No Effect</Dropdown.Item>
-        <Dropdown.Item eventKey="2">🤖</Dropdown.Item>
-        <Dropdown.Item eventKey="3" active> 👶 </Dropdown.Item>
+        {this.renderDropDownItems()}
 </DropdownButton>
     );
   }
 
-  sendButton() {
+  renderSendButton() {
     return (
-      <Button size="sm" type="submit" variant="info" onClick={this.props.handleSend}>
-        <FiSend/>
+      <Button className='send-button' size="md" type="submit" variant="light" onClick={this.props.handleSend}>
+        <FiSend color='white'/>
+      </Button>
+    );
+  }
+
+  renderPlayButton() {
+    return (
+      <Button className='play-button' size="md" type="submit" variant="light" onClick={this.handlePlay}>
+        <BsPlayFill color='white'/>
+      </Button>
+    );
+  }
+
+  renderStopButton() {
+    return (
+      <Button className='stop-button' size="md" type="submit" variant="light" onClick={this.handleStop}>
+        <BsStopFill color='white'/>
       </Button>
     );
   }
@@ -48,40 +96,22 @@ class RecordedMessage extends Component {
     this.props.playAudio(this.props.audio, this.state.effect);
   }
 
-  renderPlayOrStopButton() {
-    if (this.state.playing) {
-      return (
-        <BsPlayFill
-        onClick={this.props.playAudio}
-        className='play-button'
-        color='white'
-        />
-      )
-    } else {
-      return (
-        <BsStopFill
-      className='stop-button'
-      color='white'
-      />
-    );
-    }
+  handleStop() {
+    this.props.playAudio(this.props.audio);
   }
 
   render() {
     return (
       <Container>
-        <Row>
-          <Col className='fx-dropdown-container' xs={3}>
-            {this.effectsDropdown()}
+        <Row className="recorded-content no-gutters">
+          <Col xs={2} className='play-button-container'>
+            {this.renderPlayButton()}
           </Col>
-          <Col className="recorded-content" xs={7}>
-            <BsPlayFill
-            className='play-button'
-            color='white'
-            />
+          <Col className='fx-dropdown-container'>
+            {this.renderEffectsDropdown()}
           </Col>
-          <Col xs={2}>
-          {this.sendButton()}
+          <Col xs={2} className='send-button-container'>
+            {this.renderSendButton()}
           </Col>
         </Row>
       </Container>
@@ -93,6 +123,7 @@ class RecordedMessage extends Component {
 RecordedMessage.propTypes = {
   audio: PropTypes.string,
   playAudio: PropTypes.func,
+  stopAudio: PropTypes.func,
   handleSend: PropTypes.func,
 }
 

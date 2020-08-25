@@ -1,17 +1,41 @@
 .recorded-content {
-  width: 200px;
-  height: 31px;
-  line-height: 31px;
   border-radius: 20px;
-  background-color: #f03d25;
   text-align: center;
-  display: inline-block;
+  line-height: 36px;
+  border: 1px solid black;
+  background: #007bff;
 }
 
 .dropdown-item {
   text-align: center;
 }
 
+.send-button {
+    background: #007bff;
+    border-left: 1px solid black;
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-radius: 0;
+    border-top-right-radius: 17px;
+    border-bottom-right-radius: 17px;
+}
+
+.play-button {
+  background: #007bff;
+  border-top: 0;
+  border-left: 0;
+  border-bottom: 0;
+  border-radius: 0;
+  border-top-left-radius: 17px;
+  border-bottom-left-radius: 17px;
+  border-right: 1px solid black;
+}
+
 .fx-dropdown-container {
   display: inline-block;
+}
+
+.fx-dropdown {
+  background: #007bff;
 }
