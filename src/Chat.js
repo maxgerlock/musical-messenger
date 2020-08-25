@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, InputGroup, FormControl, Popover, OverlayTrigger } from 'react-bootstrap';
 import { BsMusicNote, BsFillMicFill } from 'react-icons/bs';
 import {start, Transport } from 'tone';
+import { effects } from './voiceEffects.js'
 import RecordModal from './RecordModal.js';
 import RecordedMessage from './RecordedMessage.js';
 import ChatBubble from './ChatBubble.js';
@@ -15,8 +16,8 @@ import './App.css';
 import './Chat.css';
 
 class Chat extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       text: '',
       sentiment: null,
@@ -113,7 +114,7 @@ class Chat extends Component {
   getRecordPopoverContents() {
     // return (<RecordModal startRecord={this.startRecord} stopRecord = {this.stopRecord}/>);
     return (
-      <RecordedMessage audio=''> </RecordedMessage>
+      <RecordedMessage effects={effects} applyEffect={() => {}} playAudio={() => {}} stopAudio={() => {}} audio=''> </RecordedMessage>
     );
   }
 

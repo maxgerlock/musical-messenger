@@ -8,11 +8,14 @@ import { FiSend } from 'react-icons/fi';
 
 class RecordedMessage extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       isRecording: false,
-      effect: null,
+      isPlaying: false,
+      effect: {
+        key: null,
+      },
       selectedEffectKey: 1,
     }
     this.renderEffectsDropdown = this.renderEffectsDropdown.bind(this);
@@ -22,36 +25,28 @@ class RecordedMessage extends Component {
     this.handleStop = this.handleStop.bind(this);
     this.renderDropDownItems = this.renderDropDownItems.bind(this);
     this.handleDropdownSelect = this.handleDropdownSelect.bind(this);
-    this.effects = [
-          {
-            key: 1,
-            effectName: 'No FX',
-          },
-          {
-            key: 2,
-            effectName: '🤖',
-          },
-          {
-            key: 3,
-            effectName: '👶',
-          },
-      ]
-  }
+    this.effects = props.effects.map((effect, i) => ({
+      ...effect,
+      key: i+1,
+  }));
+}
 
   renderDropDownItems() {
     return this.effects.map(effect => (
-        <Dropdown.Item key={effect.key} eventKey={effect.key} active={effect.key == this.state.selectedEffectKey}>
-          {effect.effectName}
+        <Dropdown.Item key={effect.key} eventKey={effect.key} active={effect.key == this.state.effect.key}>
+          {effect.name}
         </Dropdown.Item>
     ));
   }
 
   handleDropdownSelect(eventKey, event) {
-    this.setState({...this.state, selectedEffectKey: eventKey});
+    const effect = this.effects.find(effect => effect.key == eventKey);
+    this.setState({...this.state, effect: effect});
+    this.props.applyEffect(effect)
   }
 
   renderEffectsDropdown() {
-    const title = (this.effects.find(effect => effect.key == this.state.selectedEffectKey) || {effectName: 'fx'}).effectName
+    const title = (this.effects.find(effect => effect.key == this.state.effect.key) || {name: 'fx'}).name
     return (
       <DropdownButton
         className=' btn-block fx-dropdown'
@@ -76,6 +71,10 @@ class RecordedMessage extends Component {
     );
   }
 
+  renderPlayOrStopButton() {
+    return this.state.isPlaying ? this.renderStopButton() : this.renderPlayButton();
+  }
+
   renderPlayButton() {
     return (
       <Button className='play-button' size="md" type="submit" variant="light" onClick={this.handlePlay}>
@@ -93,11 +92,13 @@ class RecordedMessage extends Component {
   }
 
   handlePlay() {
-    this.props.playAudio(this.props.audio, this.state.effect);
+    this.props.playAudio(this.props.audio);
+    this.setState({...this.state, isPlaying: true});
   }
 
   handleStop() {
     this.props.playAudio(this.props.audio);
+    this.setState({...this.state, isPlaying: false});
   }
 
   render() {
@@ -119,12 +120,13 @@ class RecordedMessage extends Component {
   }
 }
 
- // TODO determine if this is the correct type
 RecordedMessage.propTypes = {
   audio: PropTypes.string,
   playAudio: PropTypes.func,
   stopAudio: PropTypes.func,
   handleSend: PropTypes.func,
+  applyEffect: PropTypes.func,
+  effects: PropTypes.array,
 }
 
 export default RecordedMessage;

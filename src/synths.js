@@ -1,5 +1,5 @@
 import { Synth } from 'tone';
-import { reverb, feedbackDelay } from './effects.js'
+import { reverb, feedbackDelay } from './synthEffects.js'
 
 const TONIC_VELOCITY = 0.6
 const SENTIMENT_VELOCITY = 0.2
