@@ -41,8 +41,8 @@ class RecordedMessage extends Component {
 
   handleDropdownSelect(eventKey, event) {
     const effect = this.effects.find(effect => effect.key == eventKey);
-    this.setState({...this.state, effect: effect});
-    this.props.applyEffect(effect)
+    this.setState({effect: effect});
+    this.props.applyEffect(effect);
   }
 
   renderEffectsDropdown() {
@@ -92,13 +92,13 @@ class RecordedMessage extends Component {
   }
 
   handlePlay() {
-    this.props.playAudio(this.props.audio);
-    this.setState({...this.state, isPlaying: true});
+    this.props.playAudio();
+    this.setState({isPlaying: true});
   }
 
   handleStop() {
-    this.props.playAudio(this.props.audio);
-    this.setState({...this.state, isPlaying: false});
+    this.props.stopAudio();
+    this.setState({isPlaying: false});
   }
 
   render() {
@@ -121,7 +121,6 @@ class RecordedMessage extends Component {
 }
 
 RecordedMessage.propTypes = {
-  audio: PropTypes.string,
   playAudio: PropTypes.func,
   stopAudio: PropTypes.func,
   handleSend: PropTypes.func,

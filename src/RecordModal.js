@@ -21,7 +21,7 @@ class RecordModal extends Component {
     } else {
       this.props.stopRecord();
     }
-    this.setState({...this.state, isRecording: !this.state.isRecording});
+    this.setState({isRecording: !this.state.isRecording});
   }
 
   getRecordButtonContents() {

@@ -4,9 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, InputGroup, FormControl, Popover, OverlayTrigger } from 'react-bootstrap';
 import { BsMusicNote, BsFillMicFill } from 'react-icons/bs';
 import {start, Transport } from 'tone';
-import { effects } from './voiceEffects.js'
-import RecordModal from './RecordModal.js';
-import RecordedMessage from './RecordedMessage.js';
+import VoiceMessageModal from './VoiceMessageModal';
 import ChatBubble from './ChatBubble.js';
 import { playTonic, playThird, playSentimentNote } from './synths.js';
 import { activateTracksBySentiment, setupPlayback } from './playback.js'
@@ -22,7 +20,8 @@ class Chat extends Component {
       text: '',
       sentiment: null,
       messages: [],
-      messageCount: 0
+      messageCount: 0,
+      voiceRecording: null,
     };
 
     this.handleTextChange = this.handleTextChange.bind(this);
@@ -31,10 +30,6 @@ class Chat extends Component {
     this.getSentimentClass = this.getSentimentClass.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.getRecordPopover = this.getRecordPopover.bind(this);
-    this.startRecord = this.startRecord.bind(this);
-    this.stopRecord = this.stopRecord.bind(this)
-    this.getRecordPopoverContents = this.getRecordPopoverContents.bind(this);
 
     Transport.bpm.value = 120
     Transport.stop();
@@ -101,30 +96,13 @@ class Chat extends Component {
     }
   }
 
-  startRecord() {
-    // TODO
-    console.log('recording started');
-  }
-
-  stopRecord() {
-    // TODO
-        console.log('recording stopped');
-  }
-
-  getRecordPopoverContents() {
-    // return (<RecordModal startRecord={this.startRecord} stopRecord = {this.stopRecord}/>);
-    return (
-      <RecordedMessage effects={effects} applyEffect={() => {}} playAudio={() => {}} stopAudio={() => {}} audio=''> </RecordedMessage>
-    );
-  }
-
   // TODO move record popover into its own file probably
   getRecordPopover() {
     return (
       <Popover className='record-popover' id="record-popover">
         <Popover.Title as="h3">Voice message</Popover.Title>
         <Popover.Content className='record-button-container'>
-          {this.getRecordPopoverContents()}
+          <VoiceMessageModal/>
         </Popover.Content>
       </Popover>
     );
@@ -134,13 +112,12 @@ class Chat extends Component {
     const messages = this.state.messages.map((message) =>
     <ChatBubble key={message.id} musical={this.props.musical} sentiment={message.sentiment} text={message.text} sentByUser={!(message.id % 2)}/>
   );
-    const popover = this.getRecordPopover();
     return (
         <div className='App-container'>
           <div className={`Chat-container ${this.getSentimentClass()}`}>{messages}</div>
           <InputGroup className="mb-3">
           <InputGroup.Prepend>
-          <OverlayTrigger trigger="click" placement="top" overlay={popover}>
+          <OverlayTrigger trigger="click" placement="top" overlay={this.getRecordPopover()}>
             <Button variant="danger" onClick={this.openRecord}>
               <BsFillMicFill/>
             </Button>
@@ -166,6 +143,7 @@ class Chat extends Component {
 
   Chat.propTypes = {
     musical: PropTypes.bool,
+    voiceRecording: PropTypes.string, // TODO validate recordedMessage type. it should probably be a URL, so string should be appropriate
   }
 
 export default Chat;

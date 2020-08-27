@@ -16,7 +16,7 @@ class App extends Component {
   }
 
   toggleMusical() {
-    this.setState({...this.state, musical: !this.state.musical});
+    this.setState({musical: !this.state.musical});
   }
 
   render() {
