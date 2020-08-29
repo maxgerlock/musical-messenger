@@ -14,15 +14,18 @@ import './App.css';
 import './Chat.css';
 
 class Chat extends Component {
+
+
   constructor(props) {
     super(props);
+
     this.state = {
       text: '',
       sentiment: null,
       messages: [],
       messageCount: 0,
-      voiceRecording: null,
     };
+    this.messagesEndRef = React.createRef();
 
     this.handleTextChange = this.handleTextChange.bind(this);
     this.audiateMessage = this.audiateMessage.bind(this);
@@ -36,38 +39,45 @@ class Chat extends Component {
     setupPlayback();
   }
 
+
   componentDidUpdate() {
-  if (!this.props.musical) {
-    Transport.stop();
-  } else {
-    Transport.start();
-  }
+    this.scrollToBottom();
+    if (!this.props.musical) {
+      Transport.stop();
+    } else {
+      Transport.start();
+    }
 }
 
   async sendMessage() {
     const sentiment = await getSentimentScore(this.state.text);
     const messages = this.state.messages;
-    messages.push({text: this.state.text || '', id: this.state.messageCount, sentiment: sentiment})
-    this.setState({text: '', sentiment: sentiment, messages: messages, messageCount: this.state.messageCount + 1})
+    messages.push({text: this.state.text || '', id: this.state.messageCount, sentiment: sentiment});
+    this.setState({text: '', sentiment: sentiment, messages: messages, messageCount: this.state.messageCount + 1});
+    if (this.props.musical) {
+      await start();
+      await this.audiateMessage(sentiment);
+    }
   }
 
-  async audiateMessage() {
-    Transport.start()
+  async audiateMessage(sentiment) {
+    Transport.start();
     playTonic();
-    playThird(this.state.sentiment);
-    playSentimentNote(this.state.sentiment);
-    activateTracksBySentiment(this.state.sentiment);
+    playThird(sentiment);
+    playSentimentNote(sentiment);
+    activateTracksBySentiment(sentiment);
   }
 
   async handleSubmit() {
     if (!this.state.text) {
       return;
     }
-    await start();
-    this.sendMessage()
-    if (this.props.musical) {
-      await this.audiateMessage();
-    }
+
+    this.sendMessage();
+  }
+
+  scrollToBottom() {
+    this.messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
   }
 
   handleTextChange(event) {
@@ -110,8 +120,9 @@ class Chat extends Component {
 
   render() {
     const messages = this.state.messages.map((message) =>
-    <ChatBubble key={message.id} musical={this.props.musical} sentiment={message.sentiment} text={message.text} sentByUser={!(message.id % 2)}/>
-  );
+      <ChatBubble key={message.id} musical={this.props.musical} sentiment={message.sentiment} text={message.text} sentByUser={!(message.id % 2)}/>
+    );
+    messages.push(<div className='test' ref={this.messagesEndRef} />);
     return (
         <div className='App-container'>
           <div className={`Chat-container ${this.getSentimentClass()}`}>{messages}</div>
@@ -143,7 +154,6 @@ class Chat extends Component {
 
   Chat.propTypes = {
     musical: PropTypes.bool,
-    voiceRecording: PropTypes.string, // TODO validate recordedMessage type. it should probably be a URL, so string should be appropriate
   }
 
 export default Chat;

@@ -39,7 +39,7 @@ class RecordedMessage extends Component {
     ));
   }
 
-  handleDropdownSelect(eventKey, event) {
+  handleDropdownSelect(eventKey) {
     const effect = this.effects.find(effect => effect.key == eventKey);
     this.setState({effect: effect});
     this.props.applyEffect(effect);

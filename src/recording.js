@@ -1,11 +1,14 @@
-import * as Tone from 'tone';
 let mediaRecorder;
 let chunks = [];
 let audio;
 
+// Acts as a cache mapping each audio source to its corresponding track, so that
+// we don't have to pass around both audio and tracks.
+// TODO eventually this should probably use a permanent store of some kind
+const audioSrcToTrackCache = {};
+
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 export const audioContext = new AudioContext();
-Tone.setContext(audioContext);
 
 export function setupRecording(onStopRecording) {
   if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -20,7 +23,7 @@ export function setupRecording(onStopRecording) {
         mediaRecorder.ondataavailable = e => {
           chunks.push(e.data);
         }
-        mediaRecorder.onstop = (e) => {
+        mediaRecorder.onstop = () => {
           const blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
           const audioUrl = window.URL.createObjectURL(blob);
           audio = new Audio(audioUrl);
@@ -49,14 +52,19 @@ export function stopRecording() {
 }
 
 export function applyEffect(audio, effect) {
-  // TODO it may be the case that the source audio is accidentally being routed in parallel with the FX send. check and fix
+  let track;
 
-  const track = audioContext.createMediaElementSource(audio);
-
-  track.connect(audioContext.destination);
+  if (Object.prototype.hasOwnProperty.call(audioSrcToTrackCache, audio.src)) {
+      track = audioSrcToTrackCache[audio.src];
+  } else {
+    track = audioContext.createMediaElementSource(audio);
+    audioSrcToTrackCache[audio.src] = track;
+  }
+  track.disconnect();
   if (effect && effect.webAudioEffect) {
-    console.log(effect.webAudioEffect);
     track.connect(effect.webAudioEffect);
     effect.webAudioEffect.connect(audioContext.destination);
+  } else {
+    track.connect(audioContext.destination);
   }
 }

@@ -14,6 +14,7 @@ const MUTE_NEUTRAL_PROBABILITY = 0.33;
 const UNMUTE_NEUTRAL_PROBABILITY = 0.33;
 const UNIVERSAL_GAIN_MODIFIER = 0.7;
 
+
 const kickPlayer = new Player({
 	url : kick,
   loop: true,
@@ -172,14 +173,14 @@ const sources = [
 ]
 
 export function setupPlayback() {
-  sources.forEach(source => source.player.mute = true); // all tracks start muted
+  sources.forEach(source => source.player.mute = true);
   sources.forEach(source => source.player.sync().start(0));
 }
 
 function compareSourcesAsc(s1, s2) {
-  if (s1.sentiment < s2.sentiment) {
+  if (s1.minimumSentiment < s2.minimumSentiment) {
     return -1;
-  } else if (s1.sentiment === s2.sentiment) {
+  } else if (s1.minimumSentiment === s2.minimumSentiment) {
     return 0;
   } else {
     return 1;
@@ -247,6 +248,7 @@ let lastSentiment = 0.5;
 export function activateTracksBySentiment(sentiment) {
   const kick = sources.find(source => source.name === 'kick'); // always play the kick to get things started
   kick.player.mute = false;
+
   const unmuteCandidates = findUnmuteCandidates(sentiment);
   let muteCandidates = [];
   if (sentimentIsExtreme(sentiment)) {
@@ -264,6 +266,6 @@ export function activateTracksBySentiment(sentiment) {
   }
 
   randomlyActivateNeutralSources();
-
+	console.log(sources.filter(source => source.player.mute === false));
   lastSentiment = sentiment;
 }

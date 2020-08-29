@@ -47,7 +47,7 @@ async function setupSentimentModel(){
 // custom sigmoid function to skew sentiments towards more extreme values
 function apply_sigmoid(x) {
    // the degree to which values are skewed towards extremes
-  const SIGMOID_SCALING_FACTOR = 6;
+  const SIGMOID_SCALING_FACTOR = 10;
   return 1/(1+Math.exp(-(SIGMOID_SCALING_FACTOR*(x-0.5))))
 }
 

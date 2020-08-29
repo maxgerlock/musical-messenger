@@ -24,11 +24,8 @@ class VoiceMessageModal extends Component {
 
   async componentDidMount() {
     const effects = await getEffects();
-    console.log('finished loading effects: ', effects);
     this.setState({effects: effects});
   }
-
-  // TODO handle getting effects asynchronously
 
   // callback to populate audio upon stopping recording is set up here
   onStopRecording(audio) {
