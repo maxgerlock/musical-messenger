@@ -15,7 +15,6 @@ import './Chat.css';
 
 class Chat extends Component {
 
-
   constructor(props) {
     super(props);
 
@@ -32,6 +31,7 @@ class Chat extends Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.getSentimentClass = this.getSentimentClass.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
+    this.sendAudioMessage = this.sendAudioMessage.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
     Transport.bpm.value = 120
@@ -58,6 +58,11 @@ class Chat extends Component {
       await start();
       await this.audiateMessage(sentiment);
     }
+  }
+  async sendAudioMessage(audio) {
+    const messages = this.state.messages;
+    messages.push({id: this.state.messageCount, audio: audio});
+    this.setState({text: '', messages: messages, messageCount: this.state.messageCount + 1});
   }
 
   async audiateMessage(sentiment) {
@@ -89,7 +94,7 @@ class Chat extends Component {
     this.handleSubmit();
   }
 }
-  // todo refactor this into a separate file that this and ChatBubble share
+  // TODO refactor this into a separate file that this and ChatBubble share
   getSentimentClass() {
     if (!this.state.sentiment || !this.props.musical) {
       return '';
@@ -112,20 +117,40 @@ class Chat extends Component {
       <Popover className='record-popover' id="record-popover">
         <Popover.Title as="h3">Voice message</Popover.Title>
         <Popover.Content className='record-button-container'>
-          <VoiceMessageModal/>
+          <VoiceMessageModal handleSend={this.sendAudioMessage}/>
         </Popover.Content>
       </Popover>
     );
   }
 
+  getChatBubbleForMessage(message) {
+    if (message.text) {
+      return (
+        <ChatBubble
+          key={message.id}
+          musical={this.props.musical}
+          sentiment={message.sentiment}
+          text={message.text}
+          sentByUser={!(message.id % 2)}/>
+      );
+    } else if (message.audio) {
+      return (
+        <ChatBubble
+          key={message.id}
+          musical={this.props.musical}
+          sentiment={message.sentiment}
+          audio={message.audio}
+          sentByUser={!(message.id % 2)}/>
+      );
+    }
+  }
+
   render() {
-    const messages = this.state.messages.map((message) =>
-      <ChatBubble key={message.id} musical={this.props.musical} sentiment={message.sentiment} text={message.text} sentByUser={!(message.id % 2)}/>
-    );
-    messages.push(<div className='test' ref={this.messagesEndRef} />);
+    const chatBubbles = this.state.messages.map((message) => this.getChatBubbleForMessage(message));
+    chatBubbles.push(<div ref={this.messagesEndRef} />);
     return (
         <div className='App-container'>
-          <div className={`Chat-container ${this.getSentimentClass()}`}>{messages}</div>
+          <div className={`Chat-container ${this.getSentimentClass()}`}>{chatBubbles}</div>
           <InputGroup className="mb-3">
           <InputGroup.Prepend>
           <OverlayTrigger trigger="click" placement="top" overlay={this.getRecordPopover()}>

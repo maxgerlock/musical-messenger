@@ -69,7 +69,6 @@ export async function getEffects() {
   const alienVoice = createAlienVoice();
   const telephoneFilter = createTelephoneFilter();
 
-  console.log('finished awaiting createReverb');
   const effects = [
     {
       webAudioEffect: null,

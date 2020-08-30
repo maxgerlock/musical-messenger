@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
+
+import VoiceMessage from './VoiceMessage';
 
 import './ChatBubble.css';
 
@@ -11,6 +13,8 @@ class ChatBubble extends Component {
     this.getSentimentClass = this.getSentimentClass.bind(this);
     this.getSentReceivedClass = this.getSentReceivedClass.bind(this);
     this.renderSentByUserBumper = this.renderSentByUserBumper.bind(this);
+    this.playAudio = this.playAudio.bind(this);
+    this.stopAudio = this.stopAudio.bind(this);
   }
 
   getSentimentClass() {
@@ -54,12 +58,39 @@ class ChatBubble extends Component {
     }
   }
 
+  renderText() {
+    return (
+      <p> {this.props.text} </p>
+    );
+  }
+
+  renderAudio() {
+    return (
+      <VoiceMessage
+        playAudio={this.playAudio}
+        stopAudio={this.stopAudio}
+        isInProgress={false}
+      />
+    );
+  }
+
+  playAudio() {
+    this.props.audio.play();
+  }
+
+  stopAudio() {
+    this.props.audio.pause();
+    this.props.audio.load();
+  }
+
+
   render() {
     const classes = `chatBubble ${this.getSentimentClass()} ${this.getSentReceivedClass()}`
     return (
-      <React.Fragment>
-        <p className = {classes}> {this.props.text} </p>
-      </React.Fragment>
+      <div className={classes}>
+        {this.props.text ? this.renderText() : null}
+        {this.props.audio ? this.renderAudio() : null}
+      </div>
     );
   }
 }
@@ -69,6 +100,7 @@ ChatBubble.propTypes = {
   musical: PropTypes.bool,
   sentiment: PropTypes.number,
   text: PropTypes.string,
+  audio: PropTypes.string, // TODO actually should be an audio HTML element
 }
 
 export default ChatBubble;

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import RecordModal from './RecordModal.js';
 import { applyEffect, setupRecording, startRecording, stopRecording } from './recording.js';
 import { getEffects } from './voiceEffects.js'
-import RecordedMessage from './RecordedMessage.js';
+import VoiceMessage from './VoiceMessage.js';
 
 class VoiceMessageModal extends Component {
   constructor() {
@@ -19,6 +20,7 @@ class VoiceMessageModal extends Component {
     this.playAudio = this.playAudio.bind(this);
     this.stopAudio = this.stopAudio.bind(this);
     this.onStopRecording = this.onStopRecording.bind(this);
+    this.handleSendAudio = this.handleSendAudio.bind(this);
     setupRecording(this.onStopRecording);
   }
 
@@ -55,19 +57,29 @@ class VoiceMessageModal extends Component {
     this.state.recordedAudio.load();
   }
 
+  handleSendAudio() {
+    this.props.handleSend(this.state.recordedAudio);
+  }
+
   render() {
     if (!this.state.recordedAudio) {
-      return (<RecordModal startRecord={this.startRecord} stopRecord = {this.stopRecord}/>);
+      return (<RecordModal startRecord={this.startRecord} stopRecord={this.stopRecord}/>);
     } else {
       return (
-        <RecordedMessage effects={this.state.effects} applyEffect={this.applyEffect} playAudio={this.playAudio} stopAudio={this.stopAudio}/>
+        <VoiceMessage
+          isInProgress
+          effects={this.state.effects}
+          applyEffect={this.applyEffect}
+          handleSend={this.handleSendAudio}
+          playAudio={this.playAudio}
+          stopAudio={this.stopAudio}/>
       );
     }
   }
 }
 
 VoiceMessageModal.propTypes = {
-
+  handleSend: PropTypes.func,
 }
 
 export default VoiceMessageModal;

@@ -12,6 +12,10 @@
   max-width: 400px;
 }
 
+.chatBubble p {
+  margin: 0;
+}
+
 .sent-by-user {
   margin-left:auto;
   margin-right:0;

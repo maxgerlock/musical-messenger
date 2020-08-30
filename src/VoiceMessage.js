@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './RecordedMessage.css';
+import './VoiceMessage.css';
 import { Button, ButtonGroup, Col, Container, Dropdown, DropdownButton, Row } from 'react-bootstrap';
 import { BsPlayFill, BsStopFill } from 'react-icons/bs';
 import { FiSend } from 'react-icons/fi';
 
-class RecordedMessage extends Component {
+class VoiceMessage extends Component {
 
   constructor(props) {
     super(props);
@@ -18,17 +18,15 @@ class RecordedMessage extends Component {
       },
       selectedEffectKey: 1,
     }
-    this.renderEffectsDropdown = this.renderEffectsDropdown.bind(this);
-    this.renderSendButton = this.renderSendButton.bind(this);
-    this.renderPlayButton = this.renderPlayButton.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
     this.handleStop = this.handleStop.bind(this);
-    this.renderDropDownItems = this.renderDropDownItems.bind(this);
     this.handleDropdownSelect = this.handleDropdownSelect.bind(this);
-    this.effects = props.effects.map((effect, i) => ({
-      ...effect,
-      key: i+1,
-  }));
+    if (props.effects) {
+      this.effects = props.effects.map((effect, i) => ({
+        ...effect,
+        key: i+1,
+      }));
+    }
 }
 
   renderDropDownItems() {
@@ -70,7 +68,8 @@ class RecordedMessage extends Component {
       </Button>
     );
   }
-
+  // TODO handle playback ending so that we can properly update isPlaying and
+  // allow the stop button to automatically go back to the play button
   renderPlayOrStopButton() {
     return this.state.isPlaying ? this.renderStopButton() : this.renderPlayButton();
   }
@@ -101,31 +100,47 @@ class RecordedMessage extends Component {
     this.setState({isPlaying: false});
   }
 
+  renderInProgressElements() {
+    return (
+      <React.Fragment>
+        <Col className='fx-dropdown-container'>
+          {this.renderEffectsDropdown()}
+        </Col>
+        <Col xs={2} className='send-button-container'>
+          {this.renderSendButton()}
+        </Col>
+      </React.Fragment>
+    );
+  }
+
+  renderVoiceMessageElements() {
+    return (
+      <Col className='voice-message-filler'>
+      </Col>
+    );
+  }
+
   render() {
     return (
-      <Container>
+      <Container className={`${!this.props.isInProgress ? 'complete' : ''}`}>
         <Row className="recorded-content no-gutters">
           <Col xs={2} className='play-button-container'>
             {this.renderPlayButton()}
           </Col>
-          <Col className='fx-dropdown-container'>
-            {this.renderEffectsDropdown()}
-          </Col>
-          <Col xs={2} className='send-button-container'>
-            {this.renderSendButton()}
-          </Col>
+          {this.props.isInProgress ? this.renderInProgressElements() : this.renderVoiceMessageElements()}
         </Row>
       </Container>
     );
   }
 }
 
-RecordedMessage.propTypes = {
+VoiceMessage.propTypes = {
   playAudio: PropTypes.func,
   stopAudio: PropTypes.func,
   handleSend: PropTypes.func,
   applyEffect: PropTypes.func,
   effects: PropTypes.array,
+  isInProgress: PropTypes.bool.isRequired,
 }
 
-export default RecordedMessage;
+export default VoiceMessage;
