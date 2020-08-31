@@ -266,6 +266,5 @@ export function activateTracksBySentiment(sentiment) {
   }
 
   randomlyActivateNeutralSources();
-	console.log(sources.filter(source => source.player.mute === false));
   lastSentiment = sentiment;
 }

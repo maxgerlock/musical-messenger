@@ -147,7 +147,7 @@ class Chat extends Component {
 
   render() {
     const chatBubbles = this.state.messages.map((message) => this.getChatBubbleForMessage(message));
-    chatBubbles.push(<div ref={this.messagesEndRef} />);
+    chatBubbles.push(<div key={'messages-end-ref'} ref={this.messagesEndRef} />);
     return (
         <div className='App-container'>
           <div className={`Chat-container ${this.getSentimentClass()}`}>{chatBubbles}</div>

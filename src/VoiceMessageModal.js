@@ -35,12 +35,10 @@ class VoiceMessageModal extends Component {
   }
 
   startRecord() {
-    console.log('recording started');
     startRecording();
   }
 
   stopRecord() {
-    console.log('recording stopped');
     stopRecording(); // audio is populated without direct assignment using the onStopRecording callback specified in setupRecording
   }
 

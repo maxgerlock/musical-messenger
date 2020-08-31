@@ -31,24 +31,23 @@ class VoiceMessage extends Component {
 
   renderDropDownItems() {
     return this.effects.map(effect => (
-        <Dropdown.Item key={effect.key} eventKey={effect.key} active={effect.key == this.state.effect.key}>
+        <Dropdown.Item key={effect.key} eventKey={effect.key} active={String(effect.key) === String(this.state.effect.key)}>
           {effect.name}
         </Dropdown.Item>
     ));
   }
 
   handleDropdownSelect(eventKey) {
-    const effect = this.effects.find(effect => effect.key == eventKey);
+    const effect = this.effects.find(effect => String(effect.key) === String(eventKey));
     this.setState({effect: effect});
     this.props.applyEffect(effect);
   }
 
   renderEffectsDropdown() {
-    const title = (this.effects.find(effect => effect.key == this.state.effect.key) || {name: 'filters'}).name
+    const title = (this.effects.find(effect => String(effect.key) === String(this.state.effect.key)) || {name: 'filters'}).name
     return (
       <DropdownButton
         className=' btn-block fx-dropdown'
-        block={true}
         size="md"
         as={ButtonGroup}
         key={'fx-dropdown'}
