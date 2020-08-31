@@ -153,7 +153,7 @@ class Chat extends Component {
           <div className={`Chat-container ${this.getSentimentClass()}`}>{chatBubbles}</div>
           <InputGroup className="mb-3">
           <InputGroup.Prepend>
-          <OverlayTrigger trigger="click" placement="top" overlay={this.getRecordPopover()}>
+          <OverlayTrigger rootClose trigger="click" placement="top" overlay={this.getRecordPopover()}>
             <Button variant="danger" onClick={this.openRecord}>
               <BsFillMicFill/>
             </Button>
