@@ -85,7 +85,7 @@ class ChatBubble extends Component {
 
 
   render() {
-    const classes = `chatBubble ${this.getSentimentClass()} ${this.getSentReceivedClass()}`
+    const classes = `chatBubble ${this.props.audio ? 'audioChatBubble' : ''} ${this.getSentimentClass()} ${this.getSentReceivedClass()}`
     return (
       <div className={classes}>
         {this.props.text ? this.renderText() : null}
@@ -100,7 +100,7 @@ ChatBubble.propTypes = {
   musical: PropTypes.bool,
   sentiment: PropTypes.number,
   text: PropTypes.string,
-  audio: PropTypes.string, // TODO actually should be an audio HTML element
+  audio: PropTypes.object,
 }
 
 export default ChatBubble;

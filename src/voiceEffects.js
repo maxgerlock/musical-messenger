@@ -72,7 +72,7 @@ export async function getEffects() {
   const effects = [
     {
       webAudioEffect: null,
-      name: 'No FX',
+      name: 'No Filter',
     },
     {
       webAudioEffect: reverbConvolver,
@@ -92,7 +92,7 @@ export async function getEffects() {
     },
     {
       webAudioEffect: reverbConvolver,
-      name: '(  ( (echo) )  )',
+      name: '🏞️',
     },
     {
       webAudioEffect: telephoneFilter,

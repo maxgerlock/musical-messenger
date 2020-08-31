@@ -44,7 +44,7 @@ class VoiceMessage extends Component {
   }
 
   renderEffectsDropdown() {
-    const title = (this.effects.find(effect => effect.key == this.state.effect.key) || {name: 'fx'}).name
+    const title = (this.effects.find(effect => effect.key == this.state.effect.key) || {name: 'filters'}).name
     return (
       <DropdownButton
         className=' btn-block fx-dropdown'
@@ -122,7 +122,7 @@ class VoiceMessage extends Component {
 
   render() {
     return (
-      <Container className={`${!this.props.isInProgress ? 'complete' : ''}`}>
+      <Container className={`${!this.props.isInProgress ? 'sent-voice-message' : ''}`}>
         <Row className="recorded-content no-gutters">
           <Col xs={2} className='play-button-container'>
             {this.renderPlayButton()}

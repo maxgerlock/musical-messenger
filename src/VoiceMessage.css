@@ -40,5 +40,10 @@
   background: #007bff;
 }
 
-.complete {
+.sent-voice-message {
+  padding:0;
+}
+
+.sent-voice-message .play-button {
+  background: inherit;
 }

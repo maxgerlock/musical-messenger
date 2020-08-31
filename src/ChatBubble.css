@@ -27,9 +27,12 @@
   background-color: #EEE;
   color: black;
 }
-
 .bumper {
   flex-basis: 60%;
+}
+
+.audioChatBubble {
+  padding:0px;
 }
 
 .blank-line {
