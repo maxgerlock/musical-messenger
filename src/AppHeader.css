@@ -23,3 +23,8 @@
 .inactive {
   color: #9eb9f0;
 }
+
+.mm-logo {
+  max-height: 50px;
+  padding-top: 10px;
+}
